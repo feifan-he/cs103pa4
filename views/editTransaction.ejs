@@ -1,0 +1,20 @@
+<form method="post" action="/transactions/update">
+  <input type="hidden" name="transactionId" value="<%= transaction._id %>" />
+  <input
+    type="text"
+    name="description"
+    value="<%= transaction.description %>"
+  /><br />
+  <input
+    type="text"
+    name="category"
+    value="<%= transaction.category %>"
+  /><br />
+  <input type="number" name="amount" value="<%= transaction.amount %>" /><br />
+  <input
+    type="date"
+    name="date"
+    value="<%= transaction.date.toISOString().slice(0, 10) %>"
+  /><br />
+  <input type="submit" value="store" />
+</form>

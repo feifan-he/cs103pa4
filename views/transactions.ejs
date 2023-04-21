@@ -1,0 +1,69 @@
+<h1>Transactions for <%= user.username %></h1>
+
+<p>Here is your list of transactions!</p>
+
+<div class="btn-group">
+  <a
+    href="/transactions/byCategory"
+    class="btn btn-outline-primary"
+    aria-current="page"
+    >Group By Category</a
+  >
+  <a href="?sortBy=category" class="btn btn-outline-primary"
+    >Sort By Category</a
+  >
+  <a href="?sortBy=amount" class="btn btn-outline-primary">Sort By Amount</a>
+  <a href="?sortBy=description" class="btn btn-outline-primary"
+    >Sort By Description</a
+  >
+  <a href="?sortBy=date" class="btn btn-outline-primary">Sort By Date</a>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">description</th>
+      <th scope="col">category</th>
+      <th scope="col">amount</th>
+      <th scope="col">date</th>
+      <th scope="col">delete</th>
+      <th scope="col">edit</th>
+    </tr>
+  </thead>
+  <tbody id="myTable"></tbody>
+</table>
+
+<h1>Add a New Transaction</h1>
+<form method="post" action="transactions">
+  <input type="text" name="description" placeholder="description" /><br />
+  <input type="text" name="category" placeholder="category" /><br />
+  <input type="number" name="amount" placeholder="amount" /><br />
+  <input type="date" name="date" /><br />
+  <input type="submit" value="store" />
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const transactions = <%- JSON.stringify(transactions) %>;
+    const params = new URLSearchParams(window.location.search);
+    const sortBy = params.get('sortBy');
+
+    function cmp(field) {
+      return (a, b) => a[field] < b[field] ? -1 : 1
+    }
+    transactions.sort(cmp(sortBy));
+
+    transactions.forEach((transaction) => {
+      $("#myTable").append(`<tr>
+        <td>${transaction.description}</td>
+        <td>${transaction.category}</td>
+        <td>${transaction.amount}</td>
+        <td>${transaction.date.slice(0, 10)}</td>
+        <td><a href="/transactions/remove/${transaction._id}"><i class="bi bi-trash" ></i></a></td>
+        <td><a href="/transactions/edit/${transaction._id}"><i class="bi bi-pencil-square"></i></a></td>
+        </tr>`);
+    });
+
+  });
+</script>
