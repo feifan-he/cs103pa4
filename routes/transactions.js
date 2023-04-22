@@ -3,6 +3,8 @@ const router = express.Router();
 const Transaction = require("../models/Transaction");
 const User = require("../models/User");
 const ToDoItem = require("../models/ToDoItem");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 isLoggedIn = (req, res, next) => {
   if (res.locals.loggedIn) {
@@ -34,6 +36,11 @@ router.post("/transactions", isLoggedIn, async (req, res, next) => {
 
 router.get("/transactions/byCategory", isLoggedIn, async (req, res, next) => {
   Transaction.aggregate([
+    {
+      $match: {
+        userId: new ObjectId(req.user._id),
+      },
+    },
     {
       $group: {
         _id: "$category",
